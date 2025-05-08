@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState, forwardRef, useImperativeHandle } from "react"
 import { Button } from "@/components/ui/button"
 import { ArrowDownToLine } from "lucide-react"
 import Link from "next/link"
@@ -8,7 +8,7 @@ import type * as THREE from "three"
 import { Canvas, useFrame } from "@react-three/fiber"
 import { OrbitControls } from "@react-three/drei"
 
-function AnimatedSphere() {
+function AnimatedSphere({ color }: { color: string }) {
   const meshRef = useRef<THREE.Mesh>(null)
 
   useFrame((state) => {
@@ -20,27 +20,30 @@ function AnimatedSphere() {
   return (
     <mesh ref={meshRef} position={[0, 0, 0]}>
       <sphereGeometry args={[1.5, 64, 64]} />
-      <meshStandardMaterial color="#4F46E5" wireframe emissive="#4F46E5" emissiveIntensity={0.2} />
+      <meshStandardMaterial color={color} wireframe emissive={color} emissiveIntensity={0.2} />
     </mesh>
   )
 }
 
-function FloatingParticles() {
+const FloatingParticles = forwardRef(function FloatingParticles(_, ref) {
   const particlesRef = useRef<THREE.Points>(null)
 
-  useEffect(() => {
+  const scatterParticles = () => {
     if (!particlesRef.current) return
-
     const particles = particlesRef.current
     const positions = particles.geometry.attributes.position.array as Float32Array
-
     for (let i = 0; i < positions.length; i += 3) {
       positions[i] = (Math.random() - 0.5) * 10
       positions[i + 1] = (Math.random() - 0.5) * 10
       positions[i + 2] = (Math.random() - 0.5) * 10
     }
-
     particles.geometry.attributes.position.needsUpdate = true
+  }
+
+  useImperativeHandle(ref, () => ({ scatterParticles }))
+
+  useEffect(() => {
+    scatterParticles()
   }, [])
 
   useFrame((state) => {
@@ -52,23 +55,40 @@ function FloatingParticles() {
   return (
     <points ref={particlesRef}>
       <bufferGeometry>
-        <bufferAttribute attach="attributes-position" count={500} itemSize={3} array={new Float32Array(500 * 3)} />
+        <bufferAttribute attach="attributes-position" count={500} itemSize={3} array={new Float32Array(500 * 3)} args={[new Float32Array(500 * 3), 3]} />
       </bufferGeometry>
       <pointsMaterial size={0.05} color="#8884FF" sizeAttenuation transparent opacity={0.8} />
     </points>
   )
-}
+})
 
 export default function Hero() {
+  const [sphereColor, setSphereColor] = useState("#4F46E5")
+  const particlesRef = useRef<{ scatterParticles: () => void }>(null)
+
+  const handleCanvasClick = () => {
+    particlesRef.current?.scatterParticles()
+  }
+
+  const toggleColor = () => {
+    setSphereColor((prev) => (prev === "#4F46E5" ? "#E54F4F" : "#4F46E5"))
+  }
+
   return (
     <section className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0" onClick={handleCanvasClick} style={{ cursor: 'pointer' }}>
         <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
           <ambientLight intensity={0.5} />
           <directionalLight position={[10, 10, 5]} intensity={1} />
-          <AnimatedSphere />
-          <FloatingParticles />
-          <OrbitControls enableZoom={false} enablePan={false} enableRotate={false} />
+          <AnimatedSphere color={sphereColor} />
+          <FloatingParticles ref={particlesRef} />
+          <OrbitControls 
+            enableZoom={false}
+            enablePan={false}
+            enableRotate={true}
+            minPolarAngle={Math.PI / 2.5}
+            maxPolarAngle={Math.PI / 1.5}
+          />
         </Canvas>
       </div>
 
@@ -80,6 +100,9 @@ export default function Hero() {
           Software Engineer • Researcher • Builder
         </h2>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button className="bg-indigo-600 hover:bg-indigo-700 text-white" onClick={toggleColor}>
+            Toggle Sphere Color
+          </Button>
           <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
             <ArrowDownToLine className="mr-2 h-4 w-4" />
             View Resume
