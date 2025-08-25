@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Github, Linkedin, Mail, Phone, MapPin, Calendar, Award, Users, Zap } from "lucide-react"
+import { Github, Linkedin, Mail, Phone, MapPin, Calendar, Award, Users, Zap, ExternalLink, Code, Search } from "lucide-react"
 import { AnimatedBackground } from "@/components/animated-background"
 import { FloatingElements } from "@/components/floating-elements"
 import Image from "next/image"
@@ -25,6 +25,9 @@ export default function Portfolio() {
             <div className="hidden md:flex items-center space-x-8">
               <a href="#about" className="text-muted-foreground hover:text-primary transition-colors">
                 About
+              </a>
+              <a href="#projects" className="text-muted-foreground hover:text-primary transition-colors">
+                Projects
               </a>
               <a href="#experience" className="text-muted-foreground hover:text-primary transition-colors">
                 Experience
@@ -158,8 +161,109 @@ export default function Portfolio() {
         </div>
       </section>
 
+      {/* Current Projects Section */}
+      <section id="projects" className="py-16 px-6 relative z-10">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12">Current Projects</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Hoppr Project */}
+            <Card className="transform hover:scale-[1.02] transition-all duration-300 hover:shadow-xl">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Search className="w-6 h-6 text-primary" />
+                    <div>
+                      <CardTitle className="text-xl">Hoppr</CardTitle>
+                      <CardDescription className="text-base">Job Search Engine</CardDescription>
+                    </div>
+                  </div>
+                 <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+                    In Development
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-muted-foreground">
+                  A modern job search engine built to help job seekers find opportunities more efficiently. 
+                  Features advanced filtering, company insights, and personalized recommendations.
+                </p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <Badge variant="secondary">React</Badge>
+                  <Badge variant="secondary">Node.js</Badge>
+                  <Badge variant="secondary">PostgreSQL</Badge>
+                  <Badge variant="secondary">Docker</Badge>
+                </div>
+                <div className="flex gap-3">
+                  <Button
+                    asChild
+                    size="sm"
+                    className="bg-primary hover:bg-primary/90"
+                  >
+                    <a href="http://hoppr.duckdns.org" target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      View Live
+                    </a>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* QDB Project */}
+            <Card className="transform hover:scale-[1.02] transition-all duration-300 hover:shadow-xl">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Code className="w-6 h-6 text-primary" />
+                    <div>
+                      <CardTitle className="text-xl">QDB</CardTitle>
+                      <CardDescription className="text-base">Queryable Database in Rust</CardDescription>
+                    </div>
+                  </div>
+                  <Badge className="bg-blue-100 text-blue-800 border-blue-200">
+                    In Development
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-muted-foreground">
+                  A high-performance queryable database implementation built from scratch in Rust. 
+                  Focuses on memory efficiency, concurrent access, and SQL-like query capabilities.
+                </p>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <Badge variant="secondary">Rust</Badge>
+                  <Badge variant="secondary">Database</Badge>
+                  <Badge variant="secondary">Systems Programming</Badge>
+                  <Badge variant="secondary">Performance</Badge>
+                </div>
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    asChild
+                    size="sm"
+                  >
+                    <a href="https://github.com/soumilbaldota/qdb/" target="_blank" rel="noopener noreferrer">
+                      <Github className="w-4 h-4 mr-2" />
+                      View Code
+                    </a>
+                  </Button>
+                </div>
+                <div className="mt-4 p-4 bg-muted/50 rounded-lg">
+                  <h4 className="font-medium text-sm mb-2">Key Features:</h4>
+                  <ul className="text-sm text-muted-foreground space-y-1">
+                    <li>• Custom storage engine with B-tree indexing</li>
+                    <li>• SQL query parser and optimizer</li>
+                    <li>• ACID transaction support</li>
+                    <li>• Memory-mapped file I/O for performance</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Experience Section */}
-      <section id="experience" className="py-16 px-6 relative z-10">
+      <section id="experience" className="py-16 px-6 bg-card/50 backdrop-blur-sm relative z-10">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Experience</h2>
           <div className="space-y-8">
